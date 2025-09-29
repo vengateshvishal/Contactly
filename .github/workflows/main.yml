@@ -1,0 +1,78 @@
+# Name of your workflow
+name: Contactly - Latest Build for Main
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'android/**'
+      - 'lib/**'
+      - 'assets/**'
+      - 'pubspec.yaml'
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      # 1. Checks-out your repository (Added fetch-depth)
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Push to Organization Repository
+        run: |
+          # Replace with your organization and repository names
+          ORG_REPO="Root-Verse/rv-fisher-app"
+
+          # Setup SSH
+          mkdir -p ~/.ssh/
+          echo "${{ secrets.ORG_REPO_DEPLOY_KEY }}" > ~/.ssh/id_rsa_org_repo
+          chmod 600 ~/.ssh/id_rsa_org_repo
+          
+          # Add a git remote for the organization repository using SSH
+          git remote add organization "git@github.com:${ORG_REPO}.git"
+          
+          # Set a user for the commit
+          git config --global user.name "GitHub Action"
+          git config --global user.email "action@github.com"
+          
+          # Push the 'dev' branch to the 'dev' branch of the org repo
+          git push organization dev:dev --force
+        env:
+          GIT_SSH_COMMAND: "ssh -i ~/.ssh/id_rsa_org_repo -o IdentitiesOnly=yes"
+
+      # 3. Set up Java
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      # 4. Set up Flutter
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+
+      # 5. Install dependencies
+      - name: Install dependencies
+        run: flutter pub get
+
+      # 6. Build the Android APK
+      - name: Build APK
+        run: flutter build apk --release
+
+      # 7. Update the 'latest' GitHub Release with the new APK
+      - name: Update Latest Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: "latest"
+          name: "Latest Testing Build"
+          body: "This is the latest build for testing, automatically generated on push to dev."
+          prerelease: true
+          files: build/app/outputs/flutter-apk/app-release.apk
