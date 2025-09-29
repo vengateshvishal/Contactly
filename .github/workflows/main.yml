@@ -1,0 +1,57 @@
+# Name of your workflow
+name: Contactly - Latest Build for Main
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'android/**'
+      - 'lib/**'
+      - 'assets/**'
+      - 'pubspec.yaml'
+      - '.github/workflows/main.yml'
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      # 1. Checks-out your repository (Added fetch-depth)
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # 3. Set up Java
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      # 4. Set up Flutter
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+
+      # 5. Install dependencies
+      - name: Install dependencies
+        run: flutter pub get
+
+      # 6. Build the Android APK
+      - name: Build APK
+        run: flutter build apk --release
+
+      # 7. Update the 'latest' GitHub Release with the new APK
+      - name: Update Latest Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: "latest"
+          name: "Latest Testing Build"
+          body: "This is the latest build for testing, automatically generated on push to dev."
+          prerelease: true
+          files: build/app/outputs/flutter-apk/app-release.apk
