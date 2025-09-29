@@ -25,28 +25,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Push to Organization Repository
-        run: |
-          # Replace with your organization and repository names
-          ORG_REPO="Root-Verse/rv-fisher-app"
-
-          # Setup SSH
-          mkdir -p ~/.ssh/
-          echo "${{ secrets.ORG_REPO_DEPLOY_KEY }}" > ~/.ssh/id_rsa_org_repo
-          chmod 600 ~/.ssh/id_rsa_org_repo
-          
-          # Add a git remote for the organization repository using SSH
-          git remote add organization "git@github.com:${ORG_REPO}.git"
-          
-          # Set a user for the commit
-          git config --global user.name "GitHub Action"
-          git config --global user.email "action@github.com"
-          
-          # Push the 'dev' branch to the 'dev' branch of the org repo
-          git push organization dev:dev --force
-        env:
-          GIT_SSH_COMMAND: "ssh -i ~/.ssh/id_rsa_org_repo -o IdentitiesOnly=yes"
-
       # 3. Set up Java
       - name: Set up Java
         uses: actions/setup-java@v4
