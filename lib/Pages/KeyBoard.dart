@@ -41,7 +41,7 @@ class _KeyboardState extends State<Keyboard> {
   @override
   Widget build(BuildContext context) {
     // Function to build a single button instance
-    Widget buildButton(String number, String letters) {
+    Widget buildButton(String number,) {
       return Padding(
         padding: const EdgeInsets.all(8.0),
         child: ElevatedButton(
@@ -65,21 +65,6 @@ class _KeyboardState extends State<Keyboard> {
                   color: Theme.of(context).colorScheme.onSurface,
                 ),
               ),
-              if (letters.isNotEmpty)
-                Padding(
-                  padding: const EdgeInsets.only(top: 2.0),
-                  child: Text(
-                    letters,
-                    style: TextStyle(
-                      fontSize: 12.0,
-                      fontWeight: FontWeight.normal,
-                      color: Theme.of(
-                        context,
-                      ).colorScheme.onSurface.withOpacity(0.5),
-                      letterSpacing: 0.5,
-                    ),
-                  ),
-                ),
             ],
           ),
         ),
@@ -114,36 +99,36 @@ class _KeyboardState extends State<Keyboard> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        buildButton('1', ''),
-                        buildButton('2', 'ABC'),
-                        buildButton('3', 'DEF'),
+                        buildButton('1',),
+                        buildButton('2',),
+                        buildButton('3',),
                       ],
                     ),
                     // Row 2
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        buildButton('4', 'GHI'),
-                        buildButton('5', 'JKL'),
-                        buildButton('6', 'MNO'),
+                        buildButton('4',),
+                        buildButton('5'),
+                        buildButton('6',)
                       ],
                     ),
                     // Row 3
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        buildButton('7', 'PRS'),
-                        buildButton('8', 'TUV'),
-                        buildButton('9', 'WXY'),
+                        buildButton('7',),
+                        buildButton('8',),
+                        buildButton('9',),
                       ],
                     ),
                     // Row 4
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        buildButton('*', ''),
-                        buildButton('0', '+'),
-                        buildButton('#', ''),
+                        buildButton('*',),
+                        buildButton('0',),
+                        buildButton('#',),
                       ],
                     ),
                   ],
