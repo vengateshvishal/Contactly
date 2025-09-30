@@ -1,4 +1,4 @@
-import 'package:contactly/Pages/contactList.dart';
+import 'package:contactly/Pages/homepage.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -13,10 +13,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true
+        useMaterial3: true,
       ),
       debugShowCheckedModeBanner: false,
-      home: ContactListScreen(),
+      home: Homepage(),
     );
   }
 }
